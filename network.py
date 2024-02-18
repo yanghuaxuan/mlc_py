@@ -72,12 +72,32 @@ def backprop(net: Network, x: [float], y: [float]) -> tuple[np.ndarray, np.ndarr
 
     return (grad_w, grad_b)
 
-def fit(net: Network) -> None:
-    pass
+def SGD(net: Network, training_data: [tuple[[float], [float]]], mini_batch_size: int, epochs: int) -> None:
+    for _ in range(epochs):
+        random.shuffle(training_data)
+        c = 0
+        grad_b = [np.zeros(l.biases.shape) for l in net.layers]
+        grad_w = [np.zeros(l.weights.shape) for l in net.layers]
+        for x, y in training_data:
+            if (c != mini_batch_size):
+                (w, b) = backprop(net, x, y)
+                print(f"w: {w}")
+                print(f"b: {b}")
+                grad_w_batch += w
+                grad_b_batch += b
+                c += 1
+            else:
+                grad_w_batch /= mini_batch_size
+                grad_b_batch /= mini_batch_size
+                print(f"grad_w_batch: {grad_w_batch}")
+                net.weights -= grad_w_batch
+                net.bias -= grad_b_batch
+                c = 0
 
 def __main__():
     ## AND Gate Example
     # Create a Neural Network of input_shape 2
     net0 = Network(input_shape=2, layers=[3,2, 1])
-    print(backprop(net0, [1,1], [1]))
+#    print(backprop(net0, [1,1], [1]))
+    SGD(net0, training_data=[([1,1], [1]), ([1,0], [0]), ([0,1], [0]), ([0,0],[0])], mini_batch_size=2, epochs=100)
 __main__()
