@@ -36,9 +36,21 @@ class Network:
                 else:
                     self.layers.append(Layer(layers[i], layers[i-1], sigmoid))
 
-# Feed inputs and iteratively activate all neurons in each layer
-def forward(net: Network, inputs: [float]) -> np.ndarray:
-    pass
+# Perform feedforward and return the last output layer
+def forward(net: Network, x: [float]) -> [np.ndarray]:
+    z_list = []
+    a_list = [np.array([x]).T]
+    grad_b = [np.zeros(l.biases.shape) for l in net.layers]
+    grad_w = [np.zeros(l.weights.shape) for l in net.layers]
+
+    for i in range(len(net.layers)):
+        l = net.layers[i]
+        # Note: net.layers does not store the input layer, so a_list[i] is the "previous" activation layer
+        z = l.weights @ a_list[i] + l.biases
+        z_list.append(z)
+        a_list.append(l.activate(z))
+
+    return a_list[-1]
         
 '''
 Performs a feed forward, and calculates the gradients for the Cost function
@@ -115,5 +127,9 @@ def __main__():
     # Create a Neural Network of input_shape 2
     net0 = Network(input_shape=2, layers=[3,2, 1])
 #    print(backprop(net0, [1,1], [1]))
-    SGD(net0, training_data=[([1,1], [1]), ([1,0], [0]), ([0,1], [0]), ([0,0],[0])], mini_batch_size=2, epochs=100, learn_rate=1e-3)
+    SGD(net0, training_data=[([1,1], [1]), ([1,0], [0]), ([0,1], [0]), ([0,0],[0])], mini_batch_size=2, epochs=10000, learn_rate=1e-3)
+    print(f"x: [1,1]: {forward(net0, [1,1])}")
+    print(f"x: [1,0]: {forward(net0, [1,0])}")
+    print(f"x: [0,1]: {forward(net0, [0,1])}")
+    print(f"x: [0,0]: {forward(net0, [0,0])}")
 __main__()
