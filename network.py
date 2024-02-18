@@ -3,7 +3,6 @@
 import random
 
 import numpy as np
-from math import exp
 from collections.abc import Callable
 
 rng = np.random.default_rng(seed=32)
