@@ -54,7 +54,6 @@ def backprop(net: Network, x: [float], y: [float]) -> None:
     for i in range(len(net.layers)):
         print(f"layer {i} weights: {net.layers[i].weights}")
 
-    # Note: net.layers does not store the input layer, so a_list[i] is the "previous" activation layer
     for i in range(len(net.layers)):
         l = net.layers[i]
         print("=+=+=+=")
@@ -66,6 +65,7 @@ def backprop(net: Network, x: [float], y: [float]) -> None:
         print(f"w * a[i-1]: {l.weights @ a_list[i]}")
         print(f"l.biases: {l.biases}")
         print(f"l.biases.T: {l.biases.T}")
+        # Note: net.layers does not store the input layer, so a_list[i] is the "previous" activation layer
         z = l.weights @ a_list[i] + l.biases
         print(f"final z shape: {z.shape}")
         z_list.append(z)
@@ -84,7 +84,6 @@ def backprop(net: Network, x: [float], y: [float]) -> None:
     grad_w[-1] = a_list[-2] @ delta
     print(f"grad_w initial: {grad_w[-1]}")
     
-    # Since net.layers does not include the input layer, but the list of activations do
     print(f"total layers in network: {len(net.layers)}")
     for l in range(len(net.layers) - 2, -1, -1):
         print("=-=-=-=")
@@ -104,12 +103,14 @@ def backprop(net: Network, x: [float], y: [float]) -> None:
         print(f"a_list: {a_list}")
         print(f"a_list[l]: {a_list[l]}")
         print(f"a_list[l] (transposed): {a_list[l].T}")
+        # net.layers does not include the input layer, but the list of activations do,  so a_list[l] is correct
         grad_w[l] = a_list[l] @ delta.T
 
     # Error of l layer
     print()
     print()
     print(f"grad_w: {grad_w}")
+    print(f"grad_b: {grad_b}")
 
 def fit(net: Network) -> None:
     pass
