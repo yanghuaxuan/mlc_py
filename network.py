@@ -84,27 +84,32 @@ def backprop(net: Network, x: [float], y: [float]) -> None:
     grad_w[-1] = a_list[-2] @ delta
     print(f"grad_w initial: {grad_w[-1]}")
     
-#    for l in range(2, len(net.layers)):
+    # Since net.layers does not include the input layer, but the list of activations do
+    print(f"total layers in network: {len(net.layers)}")
     for l in range(len(net.layers) - 2, -1, -1):
-        w = net.layers[l].weights
+        print("=-=-=-=")
+        print(f"At layer: {l}")
+        print("=-=-=-=")
+        w = net.layers[l+1].weights
         z = z_list[l]
 #        print(f"w: {w}")
-        print(f"w.transpose(): {w.transpose()}")
+        print(f"w+1.T: {w.T}")
         print(f"delta before: {delta}")
         # Err
         #delta = (w.transpose() @ delta) * d_sigmoid(z)
         #delta = (w.transpose() @ delta) * d_sigmoid(z)
-        delta = np.dot(w, delta) * d_sigmoid(z)
-        grad_b[len(net.layers) - l] = delta
-        print(f"total layers in network: {len(net.layers)}")
-        print(f"At layer: {l}")
-        print(f"a_list: {a_list}")
-        print(f"a_list[l-1]: {a_list[l-1]}")
-        print(f"a_list[l-1] (transposed): {a_list[l-1].transpose()}")
+        delta = (w.T @ delta) * d_sigmoid(z)
         print(f"delta: {delta}")
-        grad_w[len(net.layers) - l] = a_list[l-1].T @ delta
+        grad_b[l] = delta
+        print(f"a_list: {a_list}")
+        print(f"a_list[l]: {a_list[l]}")
+        print(f"a_list[l] (transposed): {a_list[l].T}")
+        grad_w[l] = a_list[l] @ delta.T
 
     # Error of l layer
+    print()
+    print()
+    print(f"grad_w: {grad_w}")
 
 def fit(net: Network) -> None:
     pass
