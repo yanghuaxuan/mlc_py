@@ -53,19 +53,16 @@ class Network:
 Perform feedforward and return the activations of the output layer
 '''
 def forward(net: Network, x: [float]) -> [np.ndarray]:
-    z_list = []
-    a_list = [np.array([x]).T]
+    a = np.array([x]).T
     grad_b = [np.zeros(l.biases.shape) for l in net.layers]
     grad_w = [np.zeros(l.weights.shape) for l in net.layers]
 
     for i in range(len(net.layers)):
         l = net.layers[i]
-        # Note: net.layers does not store the input layer, so a_list[i] is the "previous" activation layer
-        z = l.weights @ a_list[i] + l.biases
-        z_list.append(z)
-        a_list.append(l.activate(z))
+        z = l.weights @ a + l.biases
+        a = l.activate(z)
 
-    return a_list[-1]
+    return a
         
 '''
 Performs a feed forward, and calculates the gradients for the Cost function
