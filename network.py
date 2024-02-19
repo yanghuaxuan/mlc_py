@@ -74,9 +74,7 @@ def backprop(net: Network, x: [float], y: [float]) -> tuple[np.ndarray, np.ndarr
     delta = d_cost(a_list[-1], y) * d_sigmoid(z_list[-1])
     grad_b[-1] = delta
     grad_w[-1] = (a_list[-2] @ delta).T
-#    print(f"grad_w[-1]: {grad_w[-1]}")
     for l in range(len(net.layers) - 2, -1, -1):
-#        print(f"At layer {l}")
         w = net.layers[l+1].weights
         z = z_list[l]
         delta = (w.T @ delta) * d_sigmoid(z)
@@ -84,7 +82,6 @@ def backprop(net: Network, x: [float], y: [float]) -> tuple[np.ndarray, np.ndarr
         # net.layers does not include the input layer, but the list of activations do,  so a_list[l] is correct
         grad_w[l] = (a_list[l] @ delta.T).T
 
-#    print(f"final grad_w: {grad_w}")
     return (grad_w, grad_b)
 
 def SGD(net: Network, training_data: [tuple[[float], [float]]], mini_batch_size: int, epochs: int, learn_rate: float) -> None:
@@ -96,28 +93,16 @@ def SGD(net: Network, training_data: [tuple[[float], [float]]], mini_batch_size:
         for x, y in training_data:
             if (c != mini_batch_size):
                 (back_w, back_b) = backprop(net, x, y)
-#                print(f"grad_w: {grad_w}")
-#                print(f"back_w: {back_w}")
                 grad_w = [gw+bw for gw, bw in zip(grad_w, back_w)]
                 grad_b = [gb+bb for gb, bb in zip(grad_b, back_b)]
                 c += 1
             else:
-#                print(f"grad_w: {grad_w}")
-#                grad_w /= mini_batch_size
                 grad_w = [w / mini_batch_size for w in grad_w]
-#                grad_b /= mini_batch_size
                 grad_b = [b / mini_batch_size for b in grad_b]
-#                print(f"grad_w: {grad_w}")
-#                print(f"back_w: {back_w}")
 
                 for i in range(len(net.layers)):
-#                    print(f"l.weights: {net.layers[i].weights}")
-#                    print(f"grad_w[i]: {grad_w[i]}")
                     net.layers[i].weights -= grad_w[i]
                     net.layers[i].biases -= grad_b[i]
-#                print(f"grad_w_batch: {grad_w_batch}")
-#                net.weights -= grad_w_batch
-#                net.bias -= grad_b_batch
                 grad_b = [np.zeros(l.biases.shape) for l in net.layers]
                 grad_w = [np.zeros(l.weights.shape) for l in net.layers]
                 c = 0
