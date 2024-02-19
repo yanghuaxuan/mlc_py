@@ -7,16 +7,25 @@ from collections.abc import Callable
 
 rng = np.random.default_rng(seed=32)
 
+'''
+Activation functions
+'''
 def sigmoid(x: np.ndarray) -> np.ndarray:
     return 1 / (1 + np.exp(-x))
 def d_sigmoid(x: np.ndarray) -> np.ndarray:
     return np.exp(-x) / ((1 + np.exp(-x))**2)
 
+'''
+Cost functions
+'''
 def cost(a: np.ndarray, y: np.ndarray):
     return (a - y) ** 2
 def d_cost(a: np.ndarray, y: np.ndarray):
     return 2 * (a - y)
 
+'''
+Neural net layer class
+'''
 class Layer:
     def __init__(self, size: int, input_shape: int, activation: Callable[[float], float]):
         self.size = size # number of neurons in layer 
@@ -25,7 +34,11 @@ class Layer:
         self.biases = rng.random((size, 1))
         self.activate = activation
 
-# Creates a Network()
+'''
+Contains the input "layer", and the hidden and output layers.
+- The input layer is simply a vector
+- The hidden and output layers are of class Layer
+'''
 class Network:
     def __init__(self, input_shape: int, layers: [int]):
             self.inputs = np.empty(input_shape)
@@ -36,7 +49,9 @@ class Network:
                 else:
                     self.layers.append(Layer(layers[i], layers[i-1], sigmoid))
 
-# Perform feedforward and return the last output layer
+'''
+Perform feedforward and return the activations of the output layer
+'''
 def forward(net: Network, x: [float]) -> [np.ndarray]:
     z_list = []
     a_list = [np.array([x]).T]
@@ -84,6 +99,9 @@ def backprop(net: Network, x: [float], y: [float]) -> tuple[np.ndarray, np.ndarr
 
     return (grad_w, grad_b)
 
+'''
+Perform SGD
+'''
 def SGD(net: Network, training_data: [tuple[[float], [float]]], mini_batch_size: int, epochs: int, learn_rate: float) -> None:
     for _ in range(epochs):
         random.shuffle(training_data)
