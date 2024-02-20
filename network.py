@@ -112,8 +112,8 @@ def SGD(net: Network, training_data: [tuple[[float], [float]]], mini_batch_size:
                 grad_b = [gb+bb for gb, bb in zip(grad_b, back_b)]
                 c += 1
             else:
-                grad_w = [w / mini_batch_size for w in grad_w]
-                grad_b = [b / mini_batch_size for b in grad_b]
+                grad_w = [w * (learn_rate/mini_batch_size) for w in grad_w]
+                grad_b = [b * (learn_rate/mini_batch_size) for b in grad_b]
 
                 for i in range(len(net.layers)):
                     net.layers[i].weights -= grad_w[i]
