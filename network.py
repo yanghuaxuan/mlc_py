@@ -40,7 +40,7 @@ Contains the input "layer", and the hidden and output layers.
 - The hidden and output layers are of class Layer
 '''
 class Network:
-    def __init__(self, input_shape: int, layers: [int]):
+    def __init__(self, input_shape: int, layers: list[int]):
             self.inputs = np.empty(input_shape)
             self.layers = []
             for i in range(len(layers)):
@@ -52,7 +52,7 @@ class Network:
 '''
 Perform feedforward and return the activations of the output layer
 '''
-def forward(net: Network, x: [float]) -> [np.ndarray]:
+def forward(net: Network, x: list[float]) -> np.ndarray:
     a = np.array([x]).T
     grad_b = [np.zeros(l.biases.shape) for l in net.layers]
     grad_w = [np.zeros(l.weights.shape) for l in net.layers]
@@ -68,7 +68,7 @@ def forward(net: Network, x: [float]) -> [np.ndarray]:
 Performs a feed forward, and calculates the gradients for the Cost function
 Returns a tuple of weight and bias gradients
 '''
-def backprop(net: Network, x: [float], y: [float]) -> tuple[np.ndarray, np.ndarray]:
+def backprop(net: Network, x: list[float], y: list[float]) -> tuple[list[np.ndarray], list[np.ndarray]]:
     # Forward and store z and its activations
     z_list = []
     a_list = [np.array([x]).T]
@@ -99,7 +99,7 @@ def backprop(net: Network, x: [float], y: [float]) -> tuple[np.ndarray, np.ndarr
 '''
 Perform SGD
 '''
-def SGD(net: Network, training_data: [tuple[[float], [float]]], mini_batch_size: int, epochs: int, learn_rate: float) -> None:
+def SGD(net: Network, training_data: list[tuple[list[float], list[float]]], mini_batch_size: int, epochs: int, learn_rate: float) -> None:
     for epoch in range(epochs):
         print(f"epoch {epoch}")
         random.shuffle(training_data)
