@@ -100,7 +100,8 @@ def backprop(net: Network, x: [float], y: [float]) -> tuple[np.ndarray, np.ndarr
 Perform SGD
 '''
 def SGD(net: Network, training_data: [tuple[[float], [float]]], mini_batch_size: int, epochs: int, learn_rate: float) -> None:
-    for _ in range(epochs):
+    for epoch in range(epochs):
+        print(f"epoch {epoch}")
         random.shuffle(training_data)
         c = 0
         grad_b = [np.zeros(l.biases.shape) for l in net.layers]
