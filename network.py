@@ -20,6 +20,7 @@ Cost functions
 '''
 def cost(a: np.ndarray, y: np.ndarray):
     return (a - y) ** 2
+# d_cost/da
 def d_cost(a: np.ndarray, y: np.ndarray):
     return 2 * (a - y)
 
