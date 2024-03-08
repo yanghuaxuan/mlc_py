@@ -103,12 +103,15 @@ Perform SGD
 def SGD(net: Network, training_data: list[tuple[list[float], list[float]]], mini_batch_size: int, epochs: int, learn_rate: float) -> None:
     for epoch in range(epochs):
         print(f"epoch {epoch}")
+        print("--------------")
         random.shuffle(training_data)
         c = 0
         grad_b = [np.zeros(l.biases.shape) for l in net.layers]
         grad_w = [np.zeros(l.weights.shape) for l in net.layers]
+        avg_loss = 0
         for x, y in training_data:
             if (c != mini_batch_size):
+#                avg_loss += 
                 (back_w, back_b) = backprop(net, x, y)
                 grad_w = [gw+bw for gw, bw in zip(grad_w, back_w)]
                 grad_b = [gb+bb for gb, bb in zip(grad_b, back_b)]
